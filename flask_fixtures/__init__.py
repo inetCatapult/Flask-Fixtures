@@ -76,6 +76,7 @@ class Fixtures(object):
         self.db.create_all()
         # TODO why do we call this?
         self.db.session.rollback()
+    else:
       # Setup the database
       self.db.create_all()
       # TODO why do we call this?
