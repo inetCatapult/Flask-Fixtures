@@ -70,17 +70,10 @@ class Fixtures(object):
 
   def setup(self, fixtures):
     print("setting up fixtures...")
-    if self.use_test_request_context:
-      with self.app.test_request_context():
-        # Setup the database
-        self.db.create_all()
-        # TODO why do we call this?
-        self.db.session.rollback()
-    else:
-      # Setup the database
-      self.db.create_all()
-      # TODO why do we call this?
-      self.db.session.rollback()
+    # Setup the database
+    self.db.create_all()
+    # TODO why do we call this?
+    self.db.session.rollback()
 
     # Load all of the fixtures
     for filename in fixtures:
@@ -153,7 +146,11 @@ class Fixtures(object):
       fixtures = self.find_fixtures(method, fixtures)
 
     def wrapper(*args, **kwargs):
-      self.setup(fixtures)
+      if self.use_test_request_context:
+        with self.app.test_request_context()
+          self.setup(fixtures)
+      else:
+          self.setup(fixtures)
       try:
         method(*args, **kwargs)
       finally:
