@@ -147,7 +147,7 @@ class Fixtures(object):
 
     def wrapper(*args, **kwargs):
       if self.use_test_request_context:
-        with self.app.test_request_context()
+        with self.app.test_request_context():
           self.setup(fixtures)
       else:
           self.setup(fixtures)
