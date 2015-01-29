@@ -47,12 +47,13 @@ TEST_TEARDOWN_NAMES = ('tearDown',)
 
 
 class Fixtures(object):
-  def __init__(self, app, db):
-    self.init_app(app, db)
+  def __init__(self, app, db, use_test_request_context=False):
+    self.init_app(app, db, use_test_request_context)
 
-  def init_app(self, app, db):
+  def init_app(self, app, db, use_test_request_context):
     self.app = app
     self.db = db
+    self.use_test_request_context = use_test_request_context
 
   @property
   def fixtures_dirs(self):
@@ -69,10 +70,16 @@ class Fixtures(object):
 
   def setup(self, fixtures):
     print("setting up fixtures...")
-    # Setup the database
-    self.db.create_all()
-    # TODO why do we call this?
-    self.db.session.rollback()
+    if self.use_test_request_context:
+      with self.app.test_request_context():
+        # Setup the database
+        self.db.create_all()
+        # TODO why do we call this?
+        self.db.session.rollback()
+      # Setup the database
+      self.db.create_all()
+      # TODO why do we call this?
+      self.db.session.rollback()
 
     # Load all of the fixtures
     for filename in fixtures:
