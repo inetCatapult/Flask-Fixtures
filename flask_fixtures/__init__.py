@@ -196,7 +196,8 @@ class Fixtures(object):
     # of fixtures to install. In that case, we set the fixtures variable to an
     # empty list and the wrapped_obj variable to the object being decorated so
     # we can call the decorator on it later.
-    if len(fixtures) == 1 and not isinstance(fixtures[0], basestring):
+    string_type = basestring if sys.version_info < (3, 0) else str
+    if len(fixtures) == 1 and not isinstance(fixtures[0], string_type):
       wrapped_obj = fixtures[0]
       fixtures = ()
 
