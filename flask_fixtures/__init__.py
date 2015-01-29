@@ -16,7 +16,6 @@ See the License for the specific language governing permissions and
 
 from __future__ import print_function
 
-import abc
 import functools
 import glob
 import importlib
