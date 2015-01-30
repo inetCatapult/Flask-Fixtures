@@ -94,11 +94,19 @@ class Fixtures(object):
       # Load the current fixture into the database
       self.load_fixtures(loaders.load(filepath))
 
+  def setup_with_context(self, fixtures):
+    with self.app.test_request_context():
+      return self.setup(fixtures)
+
   def teardown(self):
     print("tearing down fixtures...")
     self.db.session.expunge_all()
     self.db.session.commit()
     self.db.drop_all()
+
+  def teardown_with_context(self):
+    with self.app.test_request_context():
+      return self.teardown()
 
   def load_fixtures(self, fixtures):
     """Loads the given fixtures into the database.
@@ -148,14 +156,16 @@ class Fixtures(object):
 
     def wrapper(*args, **kwargs):
       if self.use_test_request_context:
-        with self.app.test_request_context():
-          self.setup(fixtures)
+          self.setup_with_context(fixtures)
       else:
         self.setup(fixtures)
       try:
         method(*args, **kwargs)
       finally:
-        self.teardown()
+        if self.use_test_request_context:
+          self.teardown_with_context()
+        else:
+          self.teardown()
     functools.update_wrapper(wrapper, method)
     return wrapper
 
