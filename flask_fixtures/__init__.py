@@ -97,6 +97,7 @@ class Fixtures(object):
   def teardown(self):
     print("tearing down fixtures...")
     self.db.session.expunge_all()
+    self.db.session.commit()
     self.db.drop_all()
 
   def load_fixtures(self, fixtures):
@@ -150,7 +151,7 @@ class Fixtures(object):
         with self.app.test_request_context():
           self.setup(fixtures)
       else:
-          self.setup(fixtures)
+        self.setup(fixtures)
       try:
         method(*args, **kwargs)
       finally:
