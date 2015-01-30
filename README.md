@@ -164,7 +164,7 @@ from myapp import app, db
 from flask.ext.fixtures import Fixtures
 
 app.config.from_object('myapp.config.TestConfig')
-fixtures = Fixtures(app, db)
+fixtures = Fixtures(app, db, use_test_request_context=True)
 
 # In this example, we'll decorate the entire class. This way the fixtures we
 # have in the `foo_tests.yml` file are loaded into the test database at class
