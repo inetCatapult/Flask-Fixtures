@@ -178,7 +178,7 @@ class Fixtures(object):
 
     """
     def wrap_method(cls, fixtures_fn, names, default_name):
-      methods = filter(None, [getattr(cls, name, None) for name in names])
+      methods = tuple(filter(None, [getattr(cls, name, None) for name in names]))
       if len(methods) > 1:
         raise RuntimeError("Cannot have more than one setup/teardown method, found %s" %
           ', '.join(fn.__name__ for fn in methods))
